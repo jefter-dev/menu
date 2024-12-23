@@ -1,0 +1,53 @@
+package br.edu.ifpb.poo.menu.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public abstract class Item {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE) // ou GenerationType.TABLE
+    private Long id;
+
+    @Column(nullable = false)
+    protected Integer quantity;
+
+    @Column(nullable = false)
+    protected BigDecimal price;
+
+    @Column(name = "created_at", nullable = true, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = true)
+    private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemAdditional> itemAdditionals = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<OrderItem> orderItems = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+}

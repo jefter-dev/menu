@@ -1,0 +1,27 @@
+package br.edu.ifpb.poo.menu.repository;
+
+import br.edu.ifpb.poo.menu.model.Client;
+import br.edu.ifpb.poo.menu.model.Product;
+import br.edu.ifpb.poo.menu.model.User;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
+    List<Product> findByName(String name);
+
+    List<Product> findAllByUserId(Long userId);
+
+    List<Product> findByUserId(@Param("userId") Long userId);
+
+    @Transactional
+    @Query("SELECT p FROM Product p LEFT JOIN FETCH p.categories WHERE p.id = :id")
+    Optional<Product> findByIdWithCategories(@Param("id") Long id);
+}
