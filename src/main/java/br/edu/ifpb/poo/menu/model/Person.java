@@ -61,6 +61,15 @@ public abstract class Person {
         sb.append(String.format("| %-5s | %-20s | %-30s |\n", "ID", "Name", "Email"));
         sb.append(String.format("| %-5s | %-20s | %-30s |\n", id, name, email));
 
+        return sb.toString();
+    }
+
+    public String toStringAddress() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Person Details:\n");
+        sb.append(String.format("| %-5s | %-20s | %-30s |\n", "ID", "Name", "Email"));
+        sb.append(String.format("| %-5s | %-20s | %-30s |\n", id, name, email));
+
         if (address != null) {
             sb.append(address.toString());  // Chama o toString da classe Address
         } else {

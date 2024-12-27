@@ -1,6 +1,6 @@
 package br.edu.ifpb.poo.menu.service;
 
-import br.edu.ifpb.poo.menu.exceptions.category.InvalidUserException;
+import br.edu.ifpb.poo.menu.exceptions.user.InvalidUserException;
 import br.edu.ifpb.poo.menu.model.Category;
 import br.edu.ifpb.poo.menu.model.User;
 import br.edu.ifpb.poo.menu.repository.CategoryRepository;
@@ -40,7 +40,7 @@ public class CategoryService implements CrudService {
 
     }
 
-    public List<Category> getAllWithProductsByUser(User user) {
+    public List<Category> getAllWithProductsByUser(User user) throws InvalidUserException {
         if (user == null) {
             throw new InvalidUserException("O usuário fornecido fornecido não encontrado.");
         }

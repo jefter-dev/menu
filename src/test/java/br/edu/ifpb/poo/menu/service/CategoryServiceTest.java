@@ -1,6 +1,6 @@
 package br.edu.ifpb.poo.menu.service;
 
-import br.edu.ifpb.poo.menu.exceptions.category.InvalidUserException;
+import br.edu.ifpb.poo.menu.exceptions.user.InvalidUserException;
 import br.edu.ifpb.poo.menu.model.Category;
 import br.edu.ifpb.poo.menu.model.User;
 import br.edu.ifpb.poo.menu.repository.UserRepository;

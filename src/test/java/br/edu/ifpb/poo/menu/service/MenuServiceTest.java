@@ -1,14 +1,15 @@
 package br.edu.ifpb.poo.menu.service;
 
+import br.edu.ifpb.poo.menu.exceptions.user.InvalidUserException;
 import br.edu.ifpb.poo.menu.exceptions.user.UserNotFoundException;
+import br.edu.ifpb.poo.menu.model.Category;
 import br.edu.ifpb.poo.menu.model.User;
-import br.edu.ifpb.poo.menu.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 @ActiveProfiles("tests")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -17,23 +18,23 @@ class MenuServiceTest {
     private UserService userService;
 
     @Autowired
-    private UserRepository userRepository;
+    private CategoryService categoryService;
 
     @Test
     void getAllWithProductsByUser() {
-        User userTest = userRepository.findById(302L).orElse(null); // USER ADMIN
-        System.out.println("USUARIO TESTE " + userTest);
+        try {
+            User user = userService.getUserById(302L); // USER ADMIN
+            System.out.println("USUARIO SERVICE: " + user);
 
-        User user = userService.getUserById(302L); // USER ADMIN
-        System.out.println("USUARIO DE SERVICE" + user);
-//            try {
-//                User userTest = userRepository.findById(302L).orElse(null); // USER ADMIN
-//                System.out.println("USUARIO TESTE "+ userTest);
-//
-//                User user = userService.getUserById(302L); // USER ADMIN
-//                System.out.println("USUARIO DE SERVICE"+user);
-//            } catch (UserNotFoundException e) {
-//                System.out.println(e.getMessage());
-//            }
+            List<Category> categories = categoryService.getAllWithProductsByUser(user);
+            System.out.println(categories);
+
+            categories.forEach(category -> {
+                System.out.println(category.toStringWithProducts());
+            });
+
+        } catch (UserNotFoundException | InvalidUserException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
