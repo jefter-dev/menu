@@ -9,7 +9,9 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "\"order\"")
@@ -33,7 +35,8 @@ public class Order {
     @Column(nullable = false)
     private BigDecimal total;
 
-    @Column(nullable = false, length = 20)
+//    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private String status;
 
     @Column(name = "created_at", nullable = true, updatable = false)
@@ -43,7 +46,7 @@ public class Order {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<OrderItem> orderItems = new ArrayList<>();
+    private Set<OrderItem> orderItems = new HashSet<>();
 
     public Order(BigDecimal total, String status, Client client, User user) {
         this.total = total;
@@ -88,7 +91,6 @@ public class Order {
                 total,
                 status));
 
-        System.out.println(orderItems);
         sb.append("\nOrder Items:\n");
         if (orderItems != null && !orderItems.isEmpty()) {
             sb.append(String.format("| %-30s | %-10s | %-10s |\n", "Product Name", "Quantity", "Price"));
@@ -98,14 +100,31 @@ public class Order {
 
             for (OrderItem item : orderItems) {
                 String productName = item.getProduct() != null ? item.getProduct().getName() : "N/A";
-                BigDecimal productPrice = item.getProduct() != null && item.getProduct().getPrice() != null
-                        ? item.getProduct().getPrice()
-                        : BigDecimal.ZERO;
+                BigDecimal productPrice = item.getPrice() != null ? item.getPrice() : BigDecimal.ZERO;
 
                 sb.append(String.format("| %-30s | %-10d | %-10s |\n",
                         productName,
                         item.getQuantity() != null ? item.getQuantity() : 0,
                         productPrice));
+
+                // Exibir adicionais do item, se houver
+                if (item.getOrderItemAdditional() != null && !item.getOrderItemAdditional().isEmpty()) {
+                    sb.append("  Additionals:\n");
+                    sb.append(String.format("  | %-20s | %-10s | %-10s |\n", "Additional Name", "Quantity", "Price"));
+
+                    for (OrderItemAdditional additional : item.getOrderItemAdditional()) {
+                        String additionalName = additional.getAdditional() != null ? additional.getAdditional().getName() : "N/A";
+                        BigDecimal additionalPrice = additional.getPrice() != null ? additional.getPrice() : BigDecimal.ZERO;
+
+                        sb.append(String.format("  | %-20s | %-10d | %-10s |\n",
+                                additionalName,
+                                additional.getQuantity() != null ? additional.getQuantity() : 0,
+                                additionalPrice));
+
+                        // Soma o preço dos adicionais ao total geral
+                        grandTotal = grandTotal.add(additionalPrice.multiply(BigDecimal.valueOf(additional.getQuantity() != null ? additional.getQuantity() : 0)));
+                    }
+                }
 
                 // Soma o preço total (quantidade * preço unitário)
                 grandTotal = grandTotal.add(productPrice.multiply(BigDecimal.valueOf(item.getQuantity() != null ? item.getQuantity() : 0)));

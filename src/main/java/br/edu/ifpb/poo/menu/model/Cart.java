@@ -10,7 +10,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "cart")
@@ -29,8 +31,8 @@ public class Cart {
     @Column(name = "updated_at", nullable = true)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItem> cartItems = new ArrayList<>();
+    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
+    private Set<CartItem> cartItems = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "client_id")
@@ -88,6 +90,26 @@ public class Cart {
                         item.getQuantity() != null ? item.getQuantity() : 0,
                         productPrice));
 
+                // Exibe os adicionais do item
+                if (item.getCartItemAdditionals() != null && !item.getCartItemAdditionals().isEmpty()) {
+                    sb.append("  Additionals:\n");
+                    sb.append(String.format("  | %-20s | %-10s | %-10s |\n", "Additional Name", "Quantity", "Price"));
+                    for (CartItemAdditional additional : item.getCartItemAdditionals()) {
+                        String additionalName = additional.getAdditional() != null ? additional.getAdditional().getName() : "N/A";
+                        BigDecimal additionalPrice = additional.getAdditional() != null && additional.getAdditional().getPrice() != null
+                                ? additional.getAdditional().getPrice()
+                                : BigDecimal.ZERO;
+
+                        sb.append(String.format("  | %-20s | %-10d | %-10s |\n",
+                                additionalName,
+                                additional.getQuantity() != null ? additional.getQuantity() : 0,
+                                additionalPrice));
+
+                        // Soma o preço dos adicionais ao preço total
+                        totalPrice = totalPrice.add(additionalPrice.multiply(BigDecimal.valueOf(additional.getQuantity() != null ? additional.getQuantity() : 0)));
+                    }
+                }
+
                 // Soma o preço total (quantidade * preço unitário)
                 totalPrice = totalPrice.add(productPrice.multiply(BigDecimal.valueOf(item.getQuantity() != null ? item.getQuantity() : 0)));
 
@@ -104,4 +126,25 @@ public class Cart {
         return sb.toString();
     }
 
+    public BigDecimal getTotal() {
+        BigDecimal totalPrice = BigDecimal.ZERO;
+
+        for (CartItem item : cartItems) {
+            BigDecimal productPrice = item.getProduct() != null && item.getProduct().getPrice() != null
+                    ? item.getProduct().getPrice()
+                    : BigDecimal.ZERO;
+            // Soma o preço total (quantidade * preço unitário)
+            totalPrice = totalPrice.add(productPrice.multiply(BigDecimal.valueOf(item.getQuantity() != null ? item.getQuantity() : 0)));
+
+            // Soma o preço total dos adicionais
+            for (CartItemAdditional itemAdditional : item.getCartItemAdditionals()) {
+                BigDecimal additionalPrice = itemAdditional.getAdditional() != null && itemAdditional.getAdditional().getPrice() != null
+                        ? itemAdditional.getAdditional().getPrice()
+                        : BigDecimal.ZERO;
+                totalPrice = totalPrice.add(additionalPrice.multiply(BigDecimal.valueOf(itemAdditional.getQuantity() != null ? itemAdditional.getQuantity() : 0)));
+            }
+        }
+
+        return totalPrice;
+    }
 }

@@ -39,4 +39,9 @@ class CartItemRepositoryTest {
 
         assertNotNull(savedCartItem.getId());
     }
+
+    @Test
+    void findItemsWithAdditional() {
+        cartItemRepository.findItemsWithProductsAndAdditional(14L);
+    }
 }

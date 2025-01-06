@@ -45,12 +45,10 @@ class CartRepositoryTest {
     }
 
     @Test
-    public void getFindByIdWithItems() {
-        Cart cart = cartRepository.findByIdWithItems(1L).orElse(null); // USER ADMIN
-        System.out.println(cart);
-        assertNotNull(cart.getId());
+    void findCartWithItemsAndProductsAndAdditional() {
+        Cart cart = cartRepository.findCartWithItemsAndProductsAndAdditional(14L);
 
-        System.out.println(cart.getCartItems());
+        System.out.println(cart.toStringWithItems());
+        System.out.println("TOTAL: "+cart.getTotal());
     }
-
 }

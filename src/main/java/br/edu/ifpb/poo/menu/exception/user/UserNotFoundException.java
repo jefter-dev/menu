@@ -1,4 +1,4 @@
-package br.edu.ifpb.poo.menu.exceptions.user;
+package br.edu.ifpb.poo.menu.exception.user;
 
 public class UserNotFoundException extends Exception {
     public UserNotFoundException(String message) {

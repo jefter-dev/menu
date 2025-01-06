@@ -1,62 +1,60 @@
 package br.edu.ifpb.poo.menu.controller;
 
+import br.edu.ifpb.poo.menu.exception.product.ProductNotFoundException;
 import br.edu.ifpb.poo.menu.model.Product;
+import br.edu.ifpb.poo.menu.model.Views;
 import br.edu.ifpb.poo.menu.service.ProductService;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController implements BaseController<Product> {
-
     @Autowired
     private ProductService productService;
 
     @Override
-    public ResponseEntity<List<Product>> findAll() {
-        System.out.println("[Controller] ProductController > findAll");
-        return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
+    @JsonView(Views.SimpleView.class)
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> findById(@PathVariable Long id) throws ProductNotFoundException {
+        Product product = productService.getProductById(id);
+        return ResponseEntity.ok(product);  // Retorna 200 OK com o produto
     }
 
     @Override
-    public ResponseEntity<Product> findById(@PathVariable Long id) {
-        System.out.println("[Controller] ProductController > findById");
-
-        return productService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @Override
+    @PostMapping
     public ResponseEntity<Product> create(@RequestBody Product product) {
-        System.out.println("[Controller] ProductController > create");
-        System.out.println(product);
-
-        Product savedProduct = productService.create(product);
-        return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
+        // Cria o produto e retorna 201 Created
+        Product savedProduct = productService.saveProduct(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);  // Retorna 201 Created com o produto salvo
     }
 
     @Override
+    @PutMapping("/{id}")
     public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
-        System.out.println("[Controller] ProductController > update");
-
-        product.setId(id);
-        Product updatedProduct = productService.update(product);
-        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+        try {
+            // Atualiza o produto e retorna 200 OK com o produto atualizado
+            Product updatedProduct = productService.updateProduct(id, product);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (ProductNotFoundException e) {
+            // Retorna 404 Not Found se o produto não for encontrado
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        System.out.println("[Controller] ProductController > deleteById");
-
-        productService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            // Deleta o produto e retorna 204 No Content
+            productService.deleteProductById(id);
+            return ResponseEntity.noContent().build();  // Retorna 204 No Content
+        } catch (ProductNotFoundException e) {
+            // Retorna 404 Not Found se o produto não for encontrado
+            return ResponseEntity.notFound().build();
+        }
     }
 }

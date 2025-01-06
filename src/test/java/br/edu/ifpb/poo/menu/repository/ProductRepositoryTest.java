@@ -106,7 +106,7 @@ class ProductRepositoryTest {
 
     @Test
     public void shouldGetProductWithCategories() {
-        Product product = productRepository.findByIdWithCategories(802L).orElse(null);
+        Product product = productRepository.findByIdWithCategories(802L);
         assertNotNull(product, "Product should not be null");
         System.out.println(product); // Chama toString e carrega categorias
     }

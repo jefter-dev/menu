@@ -1,5 +1,9 @@
 package br.edu.ifpb.poo.menu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,44 +24,56 @@ import java.util.List;
 @AllArgsConstructor
 public class Product {
     @Id
+    @JsonView(Views.SimpleView.class)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @JsonView(Views.SimpleView.class)
     @Column(nullable = false, length = 255)
     private String name;
 
+    @JsonView(Views.SimpleView.class)
     @Column(nullable = false)
     private BigDecimal price;
 
+    @JsonView(Views.SimpleView.class)
     @Column(nullable = true, length = 255)
     private String image;
 
+    @JsonView(Views.SimpleView.class)
     @Column(nullable = true)
     private Integer additionalQuantity = 1;
 
     @Column(name = "created_at", nullable = true, updatable = false)
+    @JsonView(Views.SimpleView.class)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = true)
+    @JsonView(Views.SimpleView.class)
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonView(Views.DetailedView.class)
     private User user;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "category_product",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @JsonView(Views.DetailedView.class)
     private List<Category> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<ProductAdditional> productAdditionals = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<CartItem> cartItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<OrderItem> orderItems = new ArrayList<>();
 
     public Product(String name, Double price, User user) {
@@ -83,16 +99,6 @@ public class Product {
         sb.append("Product Details:\n");
         sb.append(String.format("| %-5s | %-20s | %-10s |\n", "ID", "Name", "Price"));
         sb.append(String.format("| %-5s | %-20s | %-10s |\n", id, name, price));
-
-//        // Adiciona as categorias (caso existam)
-//        if (!categories.isEmpty()) {
-//            sb.append("Categories: ");
-//            sb.append(categories.stream()
-//                    .map(Category::getName)
-//                    .reduce((cat1, cat2) -> cat1 + ", " + cat2)
-//                    .orElse("No categories"));
-//            sb.append("\n");
-//        }
 
         return sb.toString();
     }

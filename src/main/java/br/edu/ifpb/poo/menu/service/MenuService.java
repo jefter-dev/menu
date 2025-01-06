@@ -1,7 +1,10 @@
 package br.edu.ifpb.poo.menu.service;
 
-import br.edu.ifpb.poo.menu.exceptions.user.InvalidUserException;
+import br.edu.ifpb.poo.menu.exception.product.ProductNotFoundException;
+import br.edu.ifpb.poo.menu.exception.user.InvalidUserException;
+import br.edu.ifpb.poo.menu.exception.user.UserNotFoundException;
 import br.edu.ifpb.poo.menu.model.Category;
+import br.edu.ifpb.poo.menu.model.Product;
 import br.edu.ifpb.poo.menu.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,16 +16,21 @@ public class MenuService {
     @Autowired
     private CategoryService categoryService;
 
-    public List<Category> getAllWithProductsByUser(User user) {
-        try {
-            List<Category> categories = categoryService.getAllWithProductsByUser(user);
-            System.out.println(categories);
+    @Autowired
+    private ProductService productService;
 
-            return categories;
-        } catch (InvalidUserException e) {
-            System.out.println(e.getMessage());
-            // throw new RuntimeException(e);
-        }
-        return List.of();
+    @Autowired
+    private UserService userService;
+
+    public List<Category> getCategoriesWithProductsForUser(User user) throws InvalidUserException {
+        return categoryService.getAllWithProductsByUser(user);
+    }
+
+    public List<Product> findProduct(String name, User user) throws InvalidUserException, ProductNotFoundException {
+        return productService.searchByNameForUser(name, user);
+    }
+
+    public User getUserDetails(User user) throws UserNotFoundException {
+        return userService.getUserById(user.getId());
     }
 }

@@ -8,7 +8,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "cart_item")
@@ -38,8 +40,11 @@ public class CartItem {
     @Column(name = "updated_at", nullable = true)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "cartItem", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItemAdditional> cartItemAdditionals = new ArrayList<>();
+//    @OneToMany(mappedBy = "cartItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private List<CartItemAdditional> cartItemAdditionals = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cartItem", fetch = FetchType.LAZY)
+    private Set<CartItemAdditional> cartItemAdditionals = new HashSet<>();
 
     public CartItem(Cart cart, Product product, Integer quantity) {
         this.cart = cart;

@@ -36,6 +36,12 @@ public class CartItemAdditional {
     @Column(name = "updated_at", nullable = true)
     private LocalDateTime updatedAt;
 
+    public CartItemAdditional(CartItem cartItem, Additional additional, Integer quantity) {
+        this.cartItem = cartItem;
+        this.additional = additional;
+        this.quantity = quantity;
+    }
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

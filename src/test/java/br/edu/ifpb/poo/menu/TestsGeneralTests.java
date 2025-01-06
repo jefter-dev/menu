@@ -40,7 +40,7 @@ class TestsGeneralTests {
 
     @Test
     public void shouldGetProductWithCategories() {
-        Product product = productRepository.findByIdWithCategories(802L).orElse(null);
+        Product product = productRepository.findByIdWithCategories(802L);
         assertNotNull(product, "Product should not be null");
         System.out.println(product); // Chama toString e carrega categorias
     }
@@ -116,14 +116,6 @@ class TestsGeneralTests {
     public void shouldGetCart() {
         Cart cart = cartRepository.findById(1L).orElse(null); // USER ADMIN
         System.out.println(cart);
-        assertNotNull(cart.getId());
-    }
-
-    @Test
-    public void shouldGetCartWithItems() {
-        Cart cart = cartRepository.findByIdWithItems(1L).orElse(null); // USER ADMIN
-        assert cart != null;
-        System.out.println(cart.toStringWithItems());
         assertNotNull(cart.getId());
     }
 

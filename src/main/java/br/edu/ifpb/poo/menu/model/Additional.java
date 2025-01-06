@@ -56,4 +56,13 @@ public class Additional {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Additional Details:\n");
+        sb.append(String.format("| %-5s | %-20s | %-10s |\n", "ID", "Name", "Price"));
+        sb.append(String.format("| %-5s | %-20s | %-10.2f |\n", id, name, price));
+        return sb.toString();
+    }
 }

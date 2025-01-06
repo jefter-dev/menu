@@ -21,16 +21,13 @@ public class User extends Person {
     @Column(nullable = false)
     private boolean admin;
 
-    //    @OneToMany(mappedBy = "user")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany // (mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
-    //    @OneToMany(mappedBy = "user")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany // (mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Client> clients = new ArrayList<>();
 
-    //    @OneToMany(mappedBy = "user")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany // (mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Category> categories = new ArrayList<>();
 
     @ManyToOne

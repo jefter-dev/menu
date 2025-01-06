@@ -63,4 +63,11 @@ class OrderRepositoryTest {
         assertNotNull(order, "Order should not be null");
         System.out.println(order);
     }
+
+    @Test
+    void findOrderWithAllDetailsById() {
+        Order order = orderRepository.findOrderItemsAndProductsAndAdditional(10L);
+
+        System.out.println(order.toStringWithItems());
+    }
 }
