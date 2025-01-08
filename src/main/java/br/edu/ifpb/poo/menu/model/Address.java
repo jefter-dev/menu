@@ -1,5 +1,6 @@
 package br.edu.ifpb.poo.menu.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
@@ -13,18 +14,23 @@ import lombok.Setter;
 public class Address {
 
     @Column(length = 255)
+    @JsonView(Views.SimpleView.class)
     private String street;
 
     @Column(length = 9)
+    @JsonView(Views.SimpleView.class)
     private String postalCode;
 
     @Column(length = 20)
+    @JsonView(Views.SimpleView.class)
     private String number;
 
     @Column(length = 50)
+    @JsonView(Views.SimpleView.class)
     private String city;
 
     @Column(length = 50)
+    @JsonView(Views.SimpleView.class)
     private String referencePoint;
 
     public Address(String street, String postalCode, String number, String city, String referencePoint) {

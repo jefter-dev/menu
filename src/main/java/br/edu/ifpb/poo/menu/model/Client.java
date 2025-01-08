@@ -1,5 +1,6 @@
 package br.edu.ifpb.poo.menu.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Client extends Person {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonView(Views.DetailedView.class)
     @JoinColumn(name = "user_id")
     private User user;
 

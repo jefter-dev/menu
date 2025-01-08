@@ -1,5 +1,6 @@
 package br.edu.ifpb.poo.menu.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,30 +20,39 @@ import java.util.List;
 @AllArgsConstructor
 public class Additional {
     @Id
+    @JsonView(Views.SimpleView.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 255)
+    @JsonView(Views.SimpleView.class)
     private String name;
 
     @Column(nullable = false, length = 255)
+    @JsonView(Views.SimpleView.class)
     private String description;
 
     @Column(nullable = false)
+    @JsonView(Views.SimpleView.class)
     private BigDecimal price;
 
+    @JsonView(Views.SimpleView.class)
     @Column(name = "created_at", nullable = true, updatable = false)
     private LocalDateTime createdAt;
 
+    @JsonView(Views.SimpleView.class)
     @Column(name = "updated_at", nullable = true)
     private LocalDateTime updatedAt;
 
+    @JsonView(Views.DetailedView.class)
     @OneToMany(mappedBy = "additional", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductAdditional> productAdditionals = new ArrayList<>();
 
+    @JsonView(Views.DetailedView.class)
     @OneToMany(mappedBy = "additional", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItemAdditional> cartItemAdditionals = new ArrayList<>();
 
+    @JsonView(Views.DetailedView.class)
     @OneToMany(mappedBy = "additional", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemAdditional> orderItemAdditionals = new ArrayList<>();
 

@@ -21,7 +21,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAllByUserId(Long userId);
 
-    List<Product> findByUserId(@Param("userId") Long userId);
+    @Query("SELECT p FROM Product p WHERE p.user.id = :userId")
+    List<Product> findProductsByUserId(@Param("userId") Long userId);
 
     @Transactional
     @JsonView(Views.SimpleView.class)

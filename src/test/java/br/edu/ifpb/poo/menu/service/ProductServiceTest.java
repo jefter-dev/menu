@@ -57,4 +57,17 @@ class ProductServiceTest {
             System.out.println(e.getMessage());
         }
     }
+
+    @Test
+    void getProductsByUser() {
+        try {
+            User user = new User(); // USER ADMIN
+            user.setId(302L);
+
+            List<Product> products = productService.getProductsByUser(user);
+            System.out.println(products);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

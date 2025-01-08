@@ -2,6 +2,7 @@ package br.edu.ifpb.poo.menu.repository;
 
 import br.edu.ifpb.poo.menu.model.Cart;
 import br.edu.ifpb.poo.menu.model.CartItem;
+import br.edu.ifpb.poo.menu.model.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +23,13 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             """)
     Cart findCartWithItemsAndProductsAndAdditional(@Param("cartId") Long cartId);
 
+    @Query("""
+    SELECT c FROM Cart c
+    LEFT JOIN FETCH c.cartItems ci
+    LEFT JOIN FETCH ci.cartItemAdditionals cia
+    LEFT JOIN FETCH cia.additional
+    LEFT JOIN FETCH ci.product
+    WHERE c.client = :client
+""")
+    Cart findCartWithItemsAndProductsAndAdditionalByClient(@Param("client") Client client);
 }

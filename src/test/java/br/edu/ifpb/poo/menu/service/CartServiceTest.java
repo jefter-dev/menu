@@ -59,4 +59,18 @@ class CartServiceTest {
             System.out.println("ERROR [getCartWithItems]: " + e   .getMessage());
         }
     }
+
+    @Test
+    void findCartByClient() {
+        try {
+            Client clientFind = new Client();
+            clientFind.setId(2L);
+
+            Cart cart = cartService.findCartByClient(clientFind);
+
+            System.out.println(cart.toStringWithItems());
+        } catch (Exception e) {
+            System.out.println("ERROR [findCartByClient]: " + e   .getMessage());
+        }
+    }
 }

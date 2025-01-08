@@ -44,4 +44,27 @@ class ClientServiceTest {
             System.out.println(e.getMessage());
         }
     }
+
+    @Test
+    void findByIdAndUserId() {
+        try {
+            User user = new User();
+            user.setId(302L);
+
+            Client newClient = clientService.findByIdAndUserId(864L, user);
+            System.out.println(newClient);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    void getClientById() {
+        try {
+            Client newClient = clientService.getClientById(858L);
+            System.out.println(newClient);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

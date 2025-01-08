@@ -54,7 +54,7 @@ class TestsGeneralTests {
 
     @Test
     public void shouldGetCategoryWithProductsByUser() {
-        List<Category> categories = categoryRepository.findAllWithProductsByUserId(302L);  // USER ADMIN
+        List<Category> categories = categoryRepository.getCategoriesWithProductsByUserId(302L);  // USER ADMIN
         assertFalse(categories.isEmpty(), "Category list should not be empty");
 
         // Exibe as categorias e seus produtos associados
@@ -93,7 +93,7 @@ class TestsGeneralTests {
 
     @Test
     public void shouldGetProductsByUser() {
-        List<Product> products = productRepository.findByUserId(302L); // USER ADMIN
+        List<Product> products = productRepository.findProductsByUserId(302L); // USER ADMIN
         assertNotNull(products, "Products should not be null");
         System.out.println(products); // DEBUG
     }

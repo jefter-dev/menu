@@ -36,11 +36,14 @@ public class Category {
     @JsonView(Views.SimpleView.class)
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonView(Views.DetailedView.class)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany // (mappedBy = "categories", fetch = FetchType.LAZY)
+    @JsonView(Views.SimpleView.class)
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
     public Category(String name, User user) {

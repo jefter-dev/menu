@@ -14,7 +14,7 @@ public class ProductAdditionalService {
     @Autowired
     private ProductAdditionalRepository productAdditionalRepository;
 
-    public List<Additional> getAdditionals(Product product) throws ProductNotFoundException {
+    public List<Additional> getAdditionalsByProductId(Product product) throws ProductNotFoundException {
         if(product == null) {
             throw new ProductNotFoundException("Produto não encontrado.");
         }

@@ -1,5 +1,6 @@
 package br.edu.ifpb.poo.menu.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,12 +25,14 @@ public class OrderItem extends Item {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonView(Views.SimpleView.class)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<OrderItemAdditional> orderItemAdditional = new HashSet<>();
+    @JsonView(Views.SimpleView.class)
+    @OneToMany(mappedBy = "orderItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<OrderItemAdditional> orderItemAdditional = new ArrayList<>();
 
     public OrderItem(Order order, Product product, int quantity, BigDecimal price) {
         this.order = order;

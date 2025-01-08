@@ -67,4 +67,12 @@ public class ProductService {
         return productRepository.findByNameAndUserId(name, user.getId());
     }
 
+    public List<Product> getProductsByUser(User user) throws InvalidUserException {
+        if (user == null) {
+            throw new InvalidUserException("Usuário fornecido não encontrado.");
+        }
+
+        return productRepository.findProductsByUserId(user.getId());
+    }
+
 }

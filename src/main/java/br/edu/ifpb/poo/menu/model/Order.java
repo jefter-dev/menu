@@ -1,5 +1,6 @@
 package br.edu.ifpb.poo.menu.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class Order {
     @Id
+    @JsonView(Views.SimpleView.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -33,19 +35,23 @@ public class Order {
     private Client client;
 
     @Column(nullable = false)
+    @JsonView(Views.SimpleView.class)
     private BigDecimal total;
 
-//    @Enumerated(EnumType.STRING)
     @Column(name = "status")
+    @JsonView(Views.SimpleView.class)
     private String status;
 
     @Column(name = "created_at", nullable = true, updatable = false)
+    @JsonView(Views.SimpleView.class)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = true)
+    @JsonView(Views.SimpleView.class)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonView(Views.SimpleView.class)
     private Set<OrderItem> orderItems = new HashSet<>();
 
     public Order(BigDecimal total, String status, Client client, User user) {

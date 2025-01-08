@@ -1,5 +1,6 @@
 package br.edu.ifpb.poo.menu.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class CartItem {
     @Id
+    @JsonView(Views.SimpleView.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -28,22 +30,24 @@ public class CartItem {
     private Cart cart;
 
     @ManyToOne
+    @JsonView(Views.SimpleView.class)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(nullable = false)
+    @JsonView(Views.SimpleView.class)
     private Integer quantity;
 
     @Column(name = "created_at", nullable = true, updatable = false)
+    @JsonView(Views.SimpleView.class)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = true)
+    @JsonView(Views.SimpleView.class)
     private LocalDateTime updatedAt;
 
-//    @OneToMany(mappedBy = "cartItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private List<CartItemAdditional> cartItemAdditionals = new ArrayList<>();
-
     @OneToMany(mappedBy = "cartItem", fetch = FetchType.LAZY)
+    @JsonView(Views.SimpleView.class)
     private Set<CartItemAdditional> cartItemAdditionals = new HashSet<>();
 
     public CartItem(Cart cart, Product product, Integer quantity) {

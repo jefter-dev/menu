@@ -1,5 +1,6 @@
 package br.edu.ifpb.poo.menu.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,24 +19,30 @@ public abstract class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @JsonView(Views.SimpleView.class)
     private Long id;
 
     @Column(nullable = false, length = 20)
+    @JsonView(Views.SimpleView.class)
     private String name;
 
     @Column(nullable = false)
+    @JsonView(Views.SimpleView.class)
     private String email;
 
     @Column(nullable = true, length = 255)
     private String password;
 
     @Embedded
+    @JsonView(Views.SimpleView.class)
     private Address address;
 
     @Column(name = "created_at", nullable = true, updatable = false)
+    @JsonView(Views.SimpleView.class)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = true)
+    @JsonView(Views.SimpleView.class)
     private LocalDateTime updatedAt;
 
     public Person(String name, String email) {

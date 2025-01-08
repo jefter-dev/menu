@@ -31,13 +31,16 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Order findOrderItemsAndProductsAndAdditional(@Param("id") Long id);
 
     @Query("""
-                SELECT o 
-                FROM Order o
-                LEFT JOIN FETCH o.orderItems oi
-                LEFT JOIN FETCH oi.orderItemAdditional oia
-                LEFT JOIN FETCH o.user u
-                LEFT JOIN FETCH o.client c
-                WHERE o.client.id = :clientId
+            SELECT DISTINCT o
+            FROM Order o
+            LEFT JOIN FETCH o.orderItems oi
+            LEFT JOIN FETCH oi.product p
+            LEFT JOIN FETCH oi.orderItemAdditional oia
+            LEFT JOIN FETCH oia.additional a
+            LEFT JOIN FETCH o.user u
+            LEFT JOIN FETCH o.client c
+            WHERE o.client.id = :clientId
             """)
     List<Order> findOrdersByClientId(@Param("clientId") Long clientId);
+
 }

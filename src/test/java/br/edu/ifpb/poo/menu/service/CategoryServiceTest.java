@@ -21,20 +21,21 @@ class CategoryServiceTest {
     private CategoryService categoryService;
 
     @Test
-    void getAllCategoriesWithProductsByUser() {
+    void getCategoriesWithProductsByUserId() {
         try {
-            User user = userRepository.findById(8L).orElse(null); // USER ADMIN
+            User user = new User(); // USER ADMIN
+            user.setId(302L);
 
-            List<Category> categories = categoryService.getAllWithProductsByUser(user);
+            List<Category> categories = categoryService.getCategoriesWithProductsByUserId(user);
             System.out.println(categories);
+
+            // Exibe as categorias e seus produtos associados
+            categories.forEach(category -> {
+                System.out.println(category.toStringWithProducts());
+            });
         } catch (InvalidUserException e) {
             System.out.println(e.getMessage());
             // throw new RuntimeException(e);
         }
-
-//        // Exibe as categorias e seus produtos associados
-//        categories.forEach(category -> {
-//            System.out.println(category.toStringWithProducts());
-//        });
     }
 }

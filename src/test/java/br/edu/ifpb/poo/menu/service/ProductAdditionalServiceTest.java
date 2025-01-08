@@ -22,7 +22,7 @@ class ProductAdditionalServiceTest {
             Product product = new Product();
             product.setId(802L);
 
-            List<Additional> productsAdditional = productAdditionalService.getAdditionals(product);
+            List<Additional> productsAdditional = productAdditionalService.getAdditionalsByProductId(product);
             System.out.println(productsAdditional);
 
         } catch (ProductNotFoundException e) {

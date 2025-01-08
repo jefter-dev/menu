@@ -2,6 +2,7 @@ package br.edu.ifpb.poo.menu.service;
 
 import br.edu.ifpb.poo.menu.exception.client.ClientNotFoundException;
 import br.edu.ifpb.poo.menu.model.Client;
+import br.edu.ifpb.poo.menu.model.User;
 import br.edu.ifpb.poo.menu.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,12 +29,34 @@ public class ClientService {
     }
 
     // Método para obter um cliente por ID
-    public Client getClientById(Long id) throws ClientNotFoundException {
-        Optional<Client> clientOptional = clientRepository.findById(id);
-        if (clientOptional.isEmpty()) {
-            throw new ClientNotFoundException("Cliente não encontrado.");
+    public Client getClientById(Long clientId) throws ClientNotFoundException {
+        if (clientId == null) {
+            throw new ClientNotFoundException("Cliente inválido.");
         }
-        return clientOptional.get();
+
+        // Busca o cliente pelo ID do cliente e ID do usuário
+        return clientRepository.findById(clientId).orElse(null);
+    }
+
+    // Método para obter um cliente por ID
+    public Client getClientByIdAndUser(Long clientId, User user) throws ClientNotFoundException {
+        // Verifica se o usuário ou IDs são nulos
+        if (user == null || user.getId() == null || clientId == null) {
+            throw new ClientNotFoundException("Usuário ou cliente inválido.");
+        }
+
+        // Busca o cliente pelo ID do cliente e ID do usuário
+        return clientRepository.findByIdAndUserId(clientId, user.getId());
+    }
+
+    public Client findByIdAndUserId(Long clientId, User user) throws ClientNotFoundException {
+        // Verifica se o usuário ou IDs são nulos
+        if (user == null || user.getId() == null || clientId == null) {
+            throw new ClientNotFoundException("Usuário ou cliente inválido.");
+        }
+
+        // Busca o cliente pelo ID do cliente e ID do usuário
+        return clientRepository.findByIdAndUserId(clientId, user.getId());
     }
 
     // Método para atualizar um cliente

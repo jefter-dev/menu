@@ -12,5 +12,9 @@ import java.util.List;
 public interface ClientRepository extends JpaRepository<Client, Long> {
     List<Client> findByName(String name);
 
+    Client findByIdAndUserId(Long clientId, Long userId);
+
     List<Client> findByUserId(@Param("userId") Long userId);
+
+
 }

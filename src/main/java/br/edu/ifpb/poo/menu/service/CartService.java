@@ -67,4 +67,18 @@ public class CartService {
             throw ExceptionDatabaseService.handleDatabaseViolation(ex);
         }
     }
+
+    // Método para buscar o cart de um client
+    public Cart findCartByClient(Client client) throws CartNotFoundException, ClientNotFoundException {
+        if (client == null) {
+            throw new ClientNotFoundException("Cliente não encontrado.");
+        }
+
+        Cart cart = cartRepository.findCartWithItemsAndProductsAndAdditionalByClient(client);
+        if (cart == null) {
+            throw new CartNotFoundException("Carrinho não encontrado para este cliente.");
+        }
+
+        return cart;
+    }
 }

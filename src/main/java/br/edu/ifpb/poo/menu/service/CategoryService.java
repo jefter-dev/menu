@@ -14,11 +14,11 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<Category> getAllWithProductsByUser(User user) throws InvalidUserException {
+    public List<Category> getCategoriesWithProductsByUserId(User user) throws InvalidUserException {
         if (user == null) {
             throw new InvalidUserException("Usuário fornecido não encontrado.");
         }
 
-        return categoryRepository.findAllWithProductsByUserId(user.getId());
+        return categoryRepository.getCategoriesWithProductsByUserId(user.getId());
     }
 }
