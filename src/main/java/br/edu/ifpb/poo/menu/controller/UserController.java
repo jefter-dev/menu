@@ -59,7 +59,7 @@ public class UserController {
     }
 
     @JsonView(Views.SimpleView.class)
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<User> getUserDetails(@PathVariable String user) throws UserNotFoundException, InvalidFieldException {
         User userFind = userService.findByUsername(user);
         if (userFind == null) {
