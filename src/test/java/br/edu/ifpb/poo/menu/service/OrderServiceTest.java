@@ -23,7 +23,7 @@ class OrderServiceTest {
             User user = new User();
             user.setId(302L);
 
-            orderService.createOrder(cart, user);
+            orderService.createOrderWithCart(cart, user);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

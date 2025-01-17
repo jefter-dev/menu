@@ -31,7 +31,7 @@ public class OrderItem extends Item {
     private Product product;
 
     @JsonView(Views.SimpleView.class)
-    @OneToMany(mappedBy = "orderItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orderItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemAdditional> orderItemAdditional = new ArrayList<>();
 
     public OrderItem(Order order, Product product, int quantity, BigDecimal price) {
