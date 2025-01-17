@@ -14,9 +14,7 @@ import org.hibernate.Hibernate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "product")
@@ -33,10 +31,6 @@ public class Product {
     @JsonView(Views.SimpleView.class)
     @Column(nullable = false, length = 255)
     private String name;
-
-    @JsonView(Views.SimpleView.class)
-    @Column(nullable = true, length = 255)
-    private String description;
 
     @JsonView(Views.SimpleView.class)
     @Column(nullable = false)
@@ -60,25 +54,25 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonView(Views.DetailedView.class)
     private User user;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JsonView(Views.ProductView.class)
     @JoinTable(name = "category_product",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
-//    private List<Category> categories = new ArrayList<>();
-    private Set<Category> categories = new HashSet<>();
+    @JsonView(Views.DetailedView.class)
+    private List<Category> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonView(Views.MenuView.class)
-    private Set<ProductAdditional> productAdditionals = new HashSet<>();
+    @JsonIgnore
+    private List<ProductAdditional> productAdditionals = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.MERGE, orphanRemoval = false, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<CartItem> cartItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.MERGE, orphanRemoval = false, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<OrderItem> orderItems = new ArrayList<>();
 

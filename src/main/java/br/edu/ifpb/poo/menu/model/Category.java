@@ -38,10 +38,11 @@ public class Category {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonView(Views.DetailedView.class)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonView(Views.CategoryView.class)
+    @JsonView(Views.SimpleView.class)
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 

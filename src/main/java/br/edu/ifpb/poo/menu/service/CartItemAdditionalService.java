@@ -1,7 +1,7 @@
 package br.edu.ifpb.poo.menu.service;
 
 import br.edu.ifpb.poo.menu.exception.cart.CartItemAdditionalException;
-import br.edu.ifpb.poo.menu.exception.additional.AdditionalNotFoundException;
+import br.edu.ifpb.poo.menu.exception.product.AdditionalNotFoundException;
 import br.edu.ifpb.poo.menu.model.Additional;
 import br.edu.ifpb.poo.menu.model.CartItem;
 import br.edu.ifpb.poo.menu.model.CartItemAdditional;

@@ -1,6 +1,5 @@
 package br.edu.ifpb.poo.menu.model;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ProductAdditional {
     @Id
-    @JsonView(Views.DetailedView.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -26,26 +24,12 @@ public class ProductAdditional {
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonView(Views.SimpleView.class)
     @JoinColumn(name = "additional_id", nullable = false)
     private Additional additional;
 
-    @Column(name = "created_at", nullable = true, updatable = false)
-    @JsonView(Views.SimpleView.class)
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = true)
-    @JsonView(Views.SimpleView.class)
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }

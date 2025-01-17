@@ -19,9 +19,9 @@ class AdditionalServiceTest {
 
     @Test
     void findByName() {
-//        String nameFind = "Bacon";
-//        List<Additional> additional = additionalService.findByName(nameFind);
-//
-//        System.out.println(additional);
+        String nameFind = "Bacon";
+        List<Additional> additional = additionalService.findByName(nameFind);
+
+        System.out.println(additional);
     }
 }

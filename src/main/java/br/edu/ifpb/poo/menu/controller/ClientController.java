@@ -11,9 +11,11 @@ import br.edu.ifpb.poo.menu.model.*;
 import br.edu.ifpb.poo.menu.service.*;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -67,29 +69,5 @@ public class ClientController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(orders);
-    }
-
-    @JsonView(Views.SimpleView.class)
-    @PostMapping
-    public ResponseEntity<Client> createClient(@RequestBody Client client) throws InvalidFieldException, ClientNotFoundException {
-        Client createdClient = clientService.createClient(client);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdClient);
-    }
-
-    @JsonView(Views.SimpleView.class)
-    @PutMapping("/{clientId}")
-    public ResponseEntity<Client> updateClient(
-            @PathVariable Long clientId,
-            @RequestBody Client updatedClient
-    ) throws ClientNotFoundException {
-        Client updatedClientResult = clientService.updateClient(clientId, updatedClient);
-        return ResponseEntity.ok(updatedClientResult);
-    }
-
-    @JsonView(Views.SimpleView.class)
-    @DeleteMapping("/{clientId}")
-    public ResponseEntity<Void> deleteClient(@PathVariable Long clientId) throws ClientNotFoundException {
-        clientService.deleteClient(clientId);
-        return ResponseEntity.noContent().build();
     }
 }

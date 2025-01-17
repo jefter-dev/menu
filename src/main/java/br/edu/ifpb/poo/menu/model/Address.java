@@ -17,10 +17,6 @@ public class Address {
     @JsonView(Views.SimpleView.class)
     private String street;
 
-    @Column(length = 50)
-    @JsonView(Views.SimpleView.class)
-    private String neighborhood;
-
     @Column(length = 9)
     @JsonView(Views.SimpleView.class)
     private String postalCode;

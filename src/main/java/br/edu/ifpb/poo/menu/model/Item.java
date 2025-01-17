@@ -1,6 +1,5 @@
 package br.edu.ifpb.poo.menu.model;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,15 +19,12 @@ import java.util.List;
 @AllArgsConstructor
 public abstract class Item {
     @Id
-    @JsonView(Views.SimpleView.class)
     @GeneratedValue(strategy = GenerationType.SEQUENCE) // ou GenerationType.TABLE
     private Long id;
 
-    @JsonView(Views.SimpleView.class)
     @Column(nullable = false)
     protected Integer quantity;
 
-    @JsonView(Views.SimpleView.class)
     @Column(nullable = false)
     protected BigDecimal price;
 

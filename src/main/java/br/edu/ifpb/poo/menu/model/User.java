@@ -19,7 +19,7 @@ import java.util.List;
 public class User extends Person {
 
     @Column(nullable = false)
-    @JsonView(Views.SimpleView.class)
+    @JsonView(Views.DetailedView.class)
     private boolean admin;
 
     @Column(nullable = true, unique = true, length = 50)
@@ -27,12 +27,15 @@ public class User extends Person {
     private String username;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonView(Views.DetailedView.class)
     private List<Product> products = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonView(Views.DetailedView.class)
     private List<Client> clients = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonView(Views.DetailedView.class)
     private List<Category> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -41,6 +44,7 @@ public class User extends Person {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_register")
+    @JsonView(Views.DetailedView.class)
     private User userRegister;
 
     // Novos campos
@@ -51,10 +55,6 @@ public class User extends Person {
     @Column(nullable = true, length = 14, unique = true)
     @JsonView(Views.SimpleView.class)
     private String cnpj; // CNPJ
-
-    @Column(nullable = true, length = 255)
-    @JsonView(Views.SimpleView.class)
-    private String image;
 
     // Construtor personalizado com os campos name, email, admin, razão social e cnpj
     public User(String name, String email, boolean admin, String socialReason, String cnpj) {
@@ -72,10 +72,6 @@ public class User extends Person {
     public void removeOperatingHour(OperatingHours operatingHour) {
         operatingHour.setUser(null);
         this.operatingHours.remove(operatingHour);
-    }
-
-    public void setUsername(String username) {
-        this.username = username != null ? username.toLowerCase().replaceAll("\\s+", "") : null;
     }
 
     public String toStringDetails() {

@@ -44,20 +44,17 @@ public class Additional {
     @Column(name = "updated_at", nullable = true)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "additional", cascade = CascadeType.MERGE, orphanRemoval = false)
+    @JsonView(Views.DetailedView.class)
+    @OneToMany(mappedBy = "additional", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductAdditional> productAdditionals = new ArrayList<>();
 
-//    @JsonView(Views.DetailedView.class)
-    @OneToMany(mappedBy = "additional", cascade = CascadeType.MERGE, orphanRemoval = false)
+    @JsonView(Views.DetailedView.class)
+    @OneToMany(mappedBy = "additional", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItemAdditional> cartItemAdditionals = new ArrayList<>();
 
-//    @JsonView(Views.DetailedView.class)
-    @OneToMany(mappedBy = "additional", cascade = CascadeType.MERGE, orphanRemoval = false)
+    @JsonView(Views.DetailedView.class)
+    @OneToMany(mappedBy = "additional", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemAdditional> orderItemAdditionals = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @PrePersist
     protected void onCreate() {

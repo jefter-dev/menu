@@ -39,10 +39,6 @@ public class Cart {
     @JsonView(Views.SimpleView.class)
     private Set<CartItem> cartItems = new HashSet<>();
 
-    @Column(name = "observations")
-    @JsonView(Views.SimpleView.class)
-    private String observations;
-
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;

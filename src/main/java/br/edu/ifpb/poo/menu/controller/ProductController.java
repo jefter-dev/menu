@@ -1,7 +1,5 @@
 package br.edu.ifpb.poo.menu.controller;
 
-import br.edu.ifpb.poo.menu.exception.InvalidFieldException;
-import br.edu.ifpb.poo.menu.exception.additional.AdditionalNotFoundException;
 import br.edu.ifpb.poo.menu.exception.product.ProductNotFoundException;
 import br.edu.ifpb.poo.menu.model.Product;
 import br.edu.ifpb.poo.menu.model.Views;
@@ -11,10 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController implements BaseController<Product> {
     @Autowired
     private ProductService productService;
@@ -28,39 +25,36 @@ public class ProductController implements BaseController<Product> {
     }
 
     @Override
-    @JsonView(Views.SimpleView.class)
     @PostMapping
-    public ResponseEntity<Product> create(@RequestBody Product product) throws InvalidFieldException {
+    public ResponseEntity<Product> create(@RequestBody Product product) {
         // Cria o produto e retorna 201 Created
-        Product savedProduct = productService.createProduct(product);
+        Product savedProduct = productService.saveProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);  // Retorna 201 Created com o produto salvo
     }
 
     @Override
-    @JsonView(Views.SimpleView.class)
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) throws ProductNotFoundException, InvalidFieldException, AdditionalNotFoundException {
-        Product updatedProduct = productService.updateProduct(id, product);
-        return ResponseEntity.ok(updatedProduct);
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
+        try {
+            // Atualiza o produto e retorna 200 OK com o produto atualizado
+            Product updatedProduct = productService.updateProduct(id, product);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (ProductNotFoundException e) {
+            // Retorna 404 Not Found se o produto não for encontrado
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) throws ProductNotFoundException {
-        productService.deleteProductById(id);
-        return ResponseEntity.noContent().build();  // Retorna 204 No Content
-    }
-
-    /**
-     * Rota para fazer upload de uma imagem associada a um produto.
-     */
-    @PostMapping("/{id}/upload")
-    public ResponseEntity<String> uploadImage(
-            @PathVariable Long id,
-            @RequestParam("image") MultipartFile file
-    ) throws ProductNotFoundException, InvalidFieldException {
-        // Chama o serviço para salvar a imagem
-        productService.uploadProductImage(id, file);
-        return ResponseEntity.ok("Imagem enviada com sucesso.");
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        try {
+            // Deleta o produto e retorna 204 No Content
+            productService.deleteProductById(id);
+            return ResponseEntity.noContent().build();  // Retorna 204 No Content
+        } catch (ProductNotFoundException e) {
+            // Retorna 404 Not Found se o produto não for encontrado
+            return ResponseEntity.notFound().build();
+        }
     }
 }
