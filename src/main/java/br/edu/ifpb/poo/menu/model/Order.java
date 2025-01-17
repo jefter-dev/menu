@@ -31,6 +31,7 @@ public class Order {
     private User user;
 
     @ManyToOne
+    @JsonView(Views.SimpleView.class)
     @JoinColumn(name = "client_id")
     private Client client;
 
@@ -42,6 +43,10 @@ public class Order {
     @JsonView(Views.SimpleView.class)
     private String status;
 
+    @Column(name = "observations")
+    @JsonView(Views.SimpleView.class)
+    private String observations;
+
     @Column(name = "created_at", nullable = true, updatable = false)
     @JsonView(Views.SimpleView.class)
     private LocalDateTime createdAt;
@@ -50,7 +55,7 @@ public class Order {
     @JsonView(Views.SimpleView.class)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonView(Views.SimpleView.class)
     private Set<OrderItem> orderItems = new HashSet<>();
 

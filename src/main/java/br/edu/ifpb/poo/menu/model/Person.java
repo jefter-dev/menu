@@ -26,7 +26,7 @@ public abstract class Person {
     @JsonView(Views.SimpleView.class)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 120, unique = true)
     @JsonView(Views.SimpleView.class)
     private String email;
 
@@ -38,9 +38,11 @@ public abstract class Person {
     private Address address;
 
     @Column(name = "created_at", nullable = true, updatable = false)
+    @JsonView(Views.DetailedView.class)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = true)
+    @JsonView(Views.DetailedView.class)
     private LocalDateTime updatedAt;
 
     public Person(String name, String email) {
