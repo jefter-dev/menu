@@ -253,4 +253,10 @@ public class ProductService {
         }
     }
 
+    /**
+     * Retorna produtos em promoção.
+     */
+    public List<Product> buscarProdutosEmPromocao() {
+        return productRepository.findByPromocaoTrue(); // Consulta personalizada no repositório
+    }
 }

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -63,4 +64,12 @@ public class ProductController implements BaseController<Product> {
         productService.uploadProductImage(id, file);
         return ResponseEntity.ok("Imagem enviada com sucesso.");
     }
+
+    @GetMapping("/promocoes")
+    public ResponseEntity<List<Product>> listarProdutosEmPromocao() {
+        List<Product> produtosEmPromocao = productService.buscarProdutosEmPromocao();
+        return ResponseEntity.ok(produtosEmPromocao);
+    }
 }
+
+
