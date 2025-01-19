@@ -65,11 +65,6 @@ public class ProductController implements BaseController<Product> {
         return ResponseEntity.ok("Imagem enviada com sucesso.");
     }
 
-    @GetMapping("/promocoes")
-    public ResponseEntity<List<Product>> listarProdutosEmPromocao() {
-        List<Product> produtosEmPromocao = productService.buscarProdutosEmPromocao();
-        return ResponseEntity.ok(produtosEmPromocao);
-    }
 }
 
 

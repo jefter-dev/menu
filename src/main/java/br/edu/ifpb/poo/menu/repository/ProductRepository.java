@@ -18,7 +18,6 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByName(String name);
-    List<Product> findByPromocaoTrue();
     List<Product> findAllByUserId(Long userId);
 
     @Query("SELECT p FROM Product p WHERE p.user.id = :userId")
