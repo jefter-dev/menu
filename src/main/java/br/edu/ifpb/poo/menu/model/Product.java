@@ -34,10 +34,6 @@ public class Product {
     @Column(nullable = false, length = 255)
     private String name;
 
-    @Column(nullable = false)
-    @JsonView(Views.SimpleView.class)
-    private boolean promotion = false;
-
     @JsonView(Views.SimpleView.class)
     @Column(nullable = true, length = 255)
     private String description;
