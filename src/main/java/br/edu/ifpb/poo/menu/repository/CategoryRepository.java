@@ -18,6 +18,11 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findByUserId(@Param("userId") Long userId);
 
     // Ajuste para retornar uma lista de categorias
-    @Query("SELECT c FROM Category c LEFT JOIN FETCH c.products WHERE c.user.id = :userId")
+    @Query("SELECT c FROM Category c " +
+            "LEFT JOIN FETCH c.products p "+
+            "LEFT JOIN FETCH p.productAdditionals pa " +
+            "LEFT JOIN FETCH pa.additional " +
+            "WHERE p.user.id = :userId")
+//    @Query("SELECT c FROM Category c LEFT JOIN FETCH c.products WHERE c.user.id = :userId")
     List<Category> getCategoriesWithProductsByUserId(@Param("userId") Long userId);
 }

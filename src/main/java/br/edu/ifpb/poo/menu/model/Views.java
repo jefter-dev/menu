@@ -15,6 +15,5 @@ public class Views {
 
     public interface ProductView extends MenuView {}
 
-    public interface CategoryView extends SimpleView {}
-
+    public interface CategoryView extends MenuView {}
 }
