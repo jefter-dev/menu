@@ -32,6 +32,14 @@ public abstract class Item {
     @Column(nullable = false)
     protected BigDecimal price;
 
+    @JsonView(Views.SimpleView.class)
+    @Column(nullable = false)
+    private BigDecimal discount = BigDecimal.ZERO;
+
+    @JsonView(Views.SimpleView.class)
+    @Column(nullable = false)
+    private BigDecimal total = BigDecimal.ZERO;
+
     @Column(name = "created_at", nullable = true, updatable = false)
     private LocalDateTime createdAt;
 

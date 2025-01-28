@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,6 +38,10 @@ public class CartItem {
     @Column(nullable = false)
     @JsonView(Views.SimpleView.class)
     private Integer quantity;
+
+    @JsonView(Views.SimpleView.class)
+    @Column(nullable = false)
+    private BigDecimal discount = BigDecimal.ZERO;
 
     @Column(name = "created_at", nullable = true, updatable = false)
     @JsonView(Views.SimpleView.class)

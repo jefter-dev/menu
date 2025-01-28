@@ -43,6 +43,10 @@ public class Product {
     private BigDecimal price;
 
     @JsonView(Views.SimpleView.class)
+    @Column(nullable = false)
+    private BigDecimal discount = BigDecimal.ZERO;
+
+    @JsonView(Views.SimpleView.class)
     @Column(nullable = true, length = 255)
     private String image;
 
@@ -103,8 +107,10 @@ public class Product {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Product Details:\n");
-        sb.append(String.format("| %-5s | %-20s | %-10s |\n", "ID", "Name", "Price"));
-        sb.append(String.format("| %-5s | %-20s | %-10s |\n", id, name, price));
+        sb.append(String.format("| %-5s | %-20s | %-10s | %-15s | %-10s | %-10s |\n",
+                "ID", "Name", "Price", "Discount", "Quantity", "Description"));
+        sb.append(String.format("| %-5d | %-20s | %-10.2f | %-15.2f | %-10d | %-10s |\n",
+                id, name, price, discount, additionalQuantity, description));
 
         return sb.toString();
     }

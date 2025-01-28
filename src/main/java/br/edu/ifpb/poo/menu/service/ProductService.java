@@ -72,6 +72,7 @@ public class ProductService {
         product.setPrice(request.getPrice());
         product.setUser(request.getUser());
         product.setAdditionalQuantity(request.getAdditionalQuantity());
+        product.setDiscount(request.getDiscount() != null ? request.getDiscount() : BigDecimal.ZERO);
 
         // Adiciona os adicionais diretamente
         if (request.getProductAdditionals() != null) {
@@ -111,7 +112,7 @@ public class ProductService {
         existingProduct.setDescription(updatedProduct.getDescription());
         existingProduct.setPrice(updatedProduct.getPrice());
         existingProduct.setAdditionalQuantity(updatedProduct.getAdditionalQuantity());
-        existingProduct.setUpdatedAt(updatedProduct.getUpdatedAt());
+        existingProduct.setDiscount(updatedProduct.getDiscount() != null ? updatedProduct.getDiscount() : BigDecimal.ZERO);
 
         // Atualiza os adicionais
         productAdditionalRepository.deleteByProductId(updatedProduct.getId());
@@ -226,7 +227,9 @@ public class ProductService {
 
         try {
             // Alternativa usando um caminho absoluto, por exemplo no diretório home do usuário
-            Path uploadDirectory = Paths.get(System.getProperty("user.dir"), "uploads", "product");
+            Path uploadDirectory = Paths.get(System.getProperty("user.dir"), "uploads", "product", product.getId().toString());
+
+            System.out.println("uploadDirectory: " + uploadDirectory);
 
             // Verifica se o diretório existe, se não cria
             if (!Files.exists(uploadDirectory)) {

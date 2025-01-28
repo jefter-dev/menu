@@ -56,6 +56,10 @@ public class User extends Person {
     @JsonView(Views.SimpleView.class)
     private String image;
 
+    @Column(nullable = true, length = 255)
+    @JsonView(Views.SimpleView.class)
+    private String banner;
+
     // Construtor personalizado com os campos name, email, admin, razão social e cnpj
     public User(String name, String email, boolean admin, String socialReason, String cnpj) {
         super(name, email); // Chamando o construtor da classe pai (Person)

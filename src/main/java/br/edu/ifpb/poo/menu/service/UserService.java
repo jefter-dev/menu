@@ -290,20 +290,21 @@ public class UserService {
         }
     }
 
-    public void uploadUserImage(Long id, MultipartFile file) throws UserNotFoundException, InvalidFieldException {
-        System.out.println("uploadUserImage");
-
-        // Verifica se o produto existe
+    @Transactional
+    public void uploadUserImage(Long id, MultipartFile file, String type) throws UserNotFoundException, InvalidFieldException {
+        // Verifica se o usuário existe
         User user = getUserById(id);
 
         // Valida o arquivo
         if (file == null || file.isEmpty()) {
-            throw new InvalidFieldException("O arquivo de imagem não pode estar vazio.");
+            throw new InvalidFieldException("O arquivo não pode estar vazio.");
         }
 
         try {
-            // Alternativa usando um caminho absoluto, por exemplo no diretório home do usuário
-            Path uploadDirectory = Paths.get(System.getProperty("user.dir"), "uploads", "user");
+            // Determina o diretório de upload com base no tipo (image ou banner)
+            Path uploadDirectory = Paths.get(System.getProperty("user.dir"), "uploads", "user", user.getId().toString());
+
+            System.out.println("uploadDirectory: " + uploadDirectory);
 
             // Verifica se o diretório existe, se não cria
             if (!Files.exists(uploadDirectory)) {
@@ -314,17 +315,21 @@ public class UserService {
             String imageName = file.getOriginalFilename();
 
             // Define o caminho completo para armazenar o arquivo
-            assert imageName != null;
             Path filePath = uploadDirectory.resolve(imageName);
 
             // Salva o arquivo fisicamente no diretório
             file.transferTo(filePath.toFile());
 
-            // Atualiza o produto com o nome do arquivo
-            user.setImage(imageName);
+            // Atualiza o usuário com o nome do arquivo
+            if ("image".equalsIgnoreCase(type)) {
+                user.setImage(imageName);
+            } else if ("banner".equalsIgnoreCase(type)) {
+                user.setBanner(imageName);
+            }
 
             // Salva as alterações no usuário
             userRepository.save(user);
+
 
         } catch (IOException e) {
             throw new RuntimeException("Erro ao salvar a imagem. Detalhes: " + e.getMessage(), e);

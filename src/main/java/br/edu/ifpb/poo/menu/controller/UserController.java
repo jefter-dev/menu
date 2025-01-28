@@ -141,16 +141,23 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Rota para fazer upload de uma imagem associada a um usuário.
-     */
-    @PostMapping("/{id}/upload")
-    public ResponseEntity<String> uploadImage(
+    @PostMapping("/{id}/upload/image")
+    public ResponseEntity<String> uploadUserImage(
             @PathVariable Long id,
             @RequestParam("image") MultipartFile file
     ) throws UserNotFoundException, InvalidFieldException  {
         // Chama o serviço para salvar a imagem
-        userService.uploadUserImage(id, file);
+        userService.uploadUserImage(id, file, "image");
         return ResponseEntity.ok("Imagem enviada com sucesso.");
+    }
+
+    @PostMapping("/{id}/upload/banner")
+    public ResponseEntity<String> uploadUserBanner(
+            @PathVariable Long id,
+            @RequestParam("banner") MultipartFile file
+    ) throws UserNotFoundException, InvalidFieldException  {
+        // Chama o serviço para salvar o banner
+        userService.uploadUserImage(id, file, "banner");
+        return ResponseEntity.ok("Banner enviado com sucesso.");
     }
 }
