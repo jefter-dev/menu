@@ -7,6 +7,7 @@ import br.edu.ifpb.poo.menu.model.User;
 import br.edu.ifpb.poo.menu.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,6 +16,8 @@ import java.util.Optional;
 public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private void validateUserFields(Client client) throws InvalidFieldException {
         validateField(client.getName(), "O nome não pode estar vazio.");
@@ -31,10 +34,12 @@ public class ClientService {
     public Client createClient(Client client) throws ClientNotFoundException, InvalidFieldException {
         validateUserFields(client);
 
-        // Só valida a senha se ela for fornecida (não nula ou vazia)
-        if (client.getPassword() != null && client.getPassword().isEmpty()) {
+        if (client.getPassword() == null || client.getPassword().isEmpty()) {
             throw new InvalidFieldException("A senha não pode estar vazia.");
         }
+
+        // Criptografa a senha antes de salvar
+        client.setPassword(passwordEncoder.encode(client.getPassword()));
 
         try {
             return clientRepository.save(client);
@@ -80,11 +85,9 @@ public class ClientService {
             throw new IllegalArgumentException("Os dados do cliente atualizado não podem ser nulos.");
         }
 
-        // Verifica se o cliente existe no banco de dados
         Client existingClient = clientRepository.findById(id)
                 .orElseThrow(() -> new ClientNotFoundException("Cliente com ID " + id + " não encontrado."));
 
-        // Atualiza apenas os campos permitidos
         if (updatedClient.getName() != null && !updatedClient.getName().isEmpty()) {
             existingClient.setName(updatedClient.getName());
         }
@@ -93,18 +96,20 @@ public class ClientService {
             existingClient.setEmail(updatedClient.getEmail());
         }
 
-        // Atualiza o endereço, se necessário
         if (updatedClient.getAddress() != null) {
             existingClient.setAddress(updatedClient.getAddress());
         }
 
-        // Atualiza o usuário associado, se necessário
         if (updatedClient.getUser() != null) {
             existingClient.setUser(updatedClient.getUser());
         }
 
+        // Se uma nova senha foi fornecida, criptografa antes de salvar
+        if (updatedClient.getPassword() != null && !updatedClient.getPassword().isEmpty()) {
+            existingClient.setPassword(passwordEncoder.encode(updatedClient.getPassword()));
+        }
+
         try {
-            // Salva as alterações no banco de dados
             return clientRepository.save(existingClient);
         } catch (DataIntegrityViolationException ex) {
             throw ExceptionDatabaseService.handleDatabaseViolation(ex);
@@ -118,5 +123,27 @@ public class ClientService {
             throw new ClientNotFoundException("Cliente não encontrado.");
         }
         clientRepository.deleteById(id);
+    }
+
+    public Client login(String email, String password) throws ClientNotFoundException, InvalidFieldException {
+        if (email == null || email.isEmpty()) {
+            throw new InvalidFieldException("O email não pode estar vazio.");
+        }
+
+        if (password == null || password.isEmpty()) {
+            throw new InvalidFieldException("A senha não pode estar vazia.");
+        }
+
+        Client client = clientRepository.findByEmail(email);
+        if (client == null) {
+            throw new ClientNotFoundException("Cliente com este email não foi encontrado.");
+        }
+
+        // Verifica se a senha está correta
+        if (!passwordEncoder.matches(password, client.getPassword())) {
+            throw new InvalidFieldException("Credenciais inválidas.");
+        }
+
+        return client;
     }
 }
