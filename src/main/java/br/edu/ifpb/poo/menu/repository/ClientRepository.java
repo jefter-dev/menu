@@ -2,6 +2,7 @@ package br.edu.ifpb.poo.menu.repository;
 
 import br.edu.ifpb.poo.menu.model.Client;
 import br.edu.ifpb.poo.menu.model.Product;
+import br.edu.ifpb.poo.menu.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,4 +19,5 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Client findByEmail(String email);
 
+    Client findByEmailAndUser(String email, User user);
 }

@@ -126,4 +126,17 @@ public class MenuController {
 
         return ResponseEntity.ok(users);
     }
+
+    // *** NOVO ENDPOINT DE LOGIN ***
+    @JsonView(Views.SimpleView.class)
+    @PostMapping("/client/login")
+    public ResponseEntity<?> loginClient(@PathVariable String establishment, @RequestBody LoginRequest loginRequest) {
+        try {
+            Client client = clientService.login(loginRequest.getEmail(), loginRequest.getPassword(), establishment);
+            return ResponseEntity.ok(client);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
 }

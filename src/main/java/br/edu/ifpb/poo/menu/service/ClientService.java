@@ -5,6 +5,7 @@ import br.edu.ifpb.poo.menu.exception.client.ClientNotFoundException;
 import br.edu.ifpb.poo.menu.model.Client;
 import br.edu.ifpb.poo.menu.model.User;
 import br.edu.ifpb.poo.menu.repository.ClientRepository;
+import br.edu.ifpb.poo.menu.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,8 @@ public class ClientService {
     private ClientRepository clientRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
 
     private void validateUserFields(Client client) throws InvalidFieldException {
         validateField(client.getName(), "O nome não pode estar vazio.");
@@ -125,16 +128,17 @@ public class ClientService {
         clientRepository.deleteById(id);
     }
 
-    public Client login(String email, String password) throws ClientNotFoundException, InvalidFieldException {
-        if (email == null || email.isEmpty()) {
-            throw new InvalidFieldException("O email não pode estar vazio.");
+    public Client login(String email, String password, String establishment) throws ClientNotFoundException, InvalidFieldException {
+        // 1. Encontre o usuário (estabelecimento) pelo nome
+        User user = userRepository.findByUsername(establishment);
+        if (user == null) {
+            throw new ClientNotFoundException("Estabelecimento não encontrado: " + establishment); // Ou outra exceção apropriada
         }
 
-        if (password == null || password.isEmpty()) {
-            throw new InvalidFieldException("A senha não pode estar vazia.");
-        }
+        // 2. Encontre o cliente pelo email E associado ao usuário (estabelecimento)
+        Client client = clientRepository.findByEmailAndUser(email, user); // Assumindo que você tem esse método no repositório
+        System.out.println("CLIENTE: " + client);
 
-        Client client = clientRepository.findByEmail(email);
         if (client == null) {
             throw new ClientNotFoundException("Cliente com este email não foi encontrado.");
         }
@@ -143,7 +147,6 @@ public class ClientService {
         if (!passwordEncoder.matches(password, client.getPassword())) {
             throw new InvalidFieldException("Credenciais inválidas.");
         }
-
         return client;
     }
 }
