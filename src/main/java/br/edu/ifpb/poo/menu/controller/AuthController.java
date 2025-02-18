@@ -17,12 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-
-    private final ClientService clientService;
     private final UserService userService;
 
     public AuthController(ClientService clientService, UserService userService) {
-        this.clientService = clientService;
         this.userService = userService;
     }
 
@@ -32,17 +29,6 @@ public class AuthController {
         try {
             User user = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
             return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
-    }
-
-    @JsonView(Views.SimpleView.class)
-    @PostMapping(value = "/client/login", consumes = {"application/json", "multipart/form-data"})
-    public ResponseEntity<?> loginClient(@RequestBody LoginRequest loginRequest) {
-        try {
-            Client client = clientService.login(loginRequest.getEmail(), loginRequest.getPassword());
-            return ResponseEntity.ok(client);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
