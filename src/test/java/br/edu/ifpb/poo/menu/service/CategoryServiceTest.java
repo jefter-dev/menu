@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 @ActiveProfiles("tests")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 class CategoryServiceTest {
     @Autowired
     private UserRepository userRepository;

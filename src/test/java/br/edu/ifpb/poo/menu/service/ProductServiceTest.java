@@ -1,5 +1,6 @@
 package br.edu.ifpb.poo.menu.service;
 
+import br.edu.ifpb.poo.menu.configuration.SecurityConfig; // Importe a classe SecurityConfig
 import br.edu.ifpb.poo.menu.exception.user.InvalidUserException;
 import br.edu.ifpb.poo.menu.exception.product.ProductNotFoundException;
 import br.edu.ifpb.poo.menu.model.Product;
@@ -8,15 +9,24 @@ import br.edu.ifpb.poo.menu.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 @ActiveProfiles("tests")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@ComponentScan(
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = SecurityConfig.class  // Exclui a classe SecurityConfig
+        )
+)
 class ProductServiceTest {
     @Autowired
     private ProductService productService;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -52,7 +62,7 @@ class ProductServiceTest {
         try {
             Product product = productService.getProductById(1104L);
             System.out.println(product);
-//            System.out.println(product.getUser());
+            //System.out.println(product.getUser());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
